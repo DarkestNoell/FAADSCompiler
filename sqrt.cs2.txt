@@ -1,0 +1,40 @@
+
+public =&private == null
+
+void Main(string[] args) //name space name token name token token space name token
+{ //t
+    RunSqrt(); //name token token
+} //t
+private void RunSqrt() //name space name token token
+{ //t
+    double A, B; //name space name t sp name
+    double E = 0.01; //n sp n t num
+    for (int i = 0; i <= 100; i++) //n sp t n sp n sp t sp num t sp n t t sp num t sp n t t t
+    { //t
+        if (i < 2) //n sp t sp t sp num t
+        { //t 
+            B = i; //n sp t sp name
+        }//t
+        else //n
+        { //t
+            A = (0.5 * i); //n t t n t n t
+            B = (A * A + i) / (2 * A); //n t t n t n t n
+            while (Abs(A - B) > E)//n t n t n t n t t n
+            { //t
+                A = B; //n t n
+                B = (A * A + i) / (2 * A); //n t t n t n t n
+            } //t 
+        } //t
+        WriteLine(B); //n t n t
+    } //t 
+} //t
+public double Abs(double input) //n n t n n t
+{ //t
+    double toReturn = input; //n n t n
+    if (input < 0) //n t n t num t
+    { //t 
+        toReturn = -input; //n t tn
+    } //t
+
+    return toReturn; //n n
+} //t
