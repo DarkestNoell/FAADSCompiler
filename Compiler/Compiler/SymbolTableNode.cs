@@ -12,7 +12,6 @@ namespace Compiler
         private SymbolTableNode RightChild;
         private SymbolTableNode LeftChild;
         private Dictionary<int, Symbol> SymbolTableData = new Dictionary<int, Symbol>();
-
         public SymbolTableNode(SymbolTableNode parent, SymbolTableNode rightChild, SymbolTableNode leftChild)
         {
             this.Parent = parent;
