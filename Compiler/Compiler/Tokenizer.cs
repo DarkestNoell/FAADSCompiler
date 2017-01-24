@@ -27,19 +27,19 @@ namespace Compiler
                 switch (state)
                 {
                     case Types.Space:
-                        if (isWhiteSpace(c))
+                        if (IsWhiteSpace(c))
                         {
                             //do nothing
                         }
-                        if (isSymbol(c))
+                        if (IsSymbol(c))
                         {
                             state = Types.Symbol;
                         }
-                        if (isLetter(c))
+                        if (IsLetter(c))
                         {
                             state = Types.Id;
                         }
-                        if (isQuotation(c))
+                        if (IsQuotation(c))
                         {
                             state = Types.String;
                         }
@@ -63,29 +63,38 @@ namespace Compiler
                 //state machine
         }
 
-        public bool isWhiteSpace(char c)
+        public bool IsWhiteSpace(char c)
         {
-            
+            bool isWhiteSpace = false;
+            return isWhiteSpace;
         }
 
-        public bool isSymbol(char c)
+        public bool IsSymbol(char c)
         {
+            bool isSymbol = false;
 
+            return isSymbol;
         }
 
-        public bool isNum(char c)
+        public bool IsNum(char c)
         {
+            bool isNum = false;
 
+            return isNum;
         }
 
-        public bool isQuotation(char c)
+        public bool IsQuotation(char c)
         {
+            bool isQuotation = false;
 
+            return isQuotation;
         }
 
-        public bool isLetter(char c)
+        public bool IsLetter(char c)
         {
+            bool isLetter = false;
 
+            return isLetter;
         }
     }
 }
