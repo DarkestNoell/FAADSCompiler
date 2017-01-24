@@ -9,11 +9,11 @@ namespace Compiler
     class Tokenizer
     { //shalom
 
-        List<Symbol> tokens = new List<Symbol>();
+        private List<Symbol> tokens = new List<Symbol>();
+        private StringBuilder sb = new StringBuilder();
+        private EState state = EState.Space;
         public void Tokenize(string instructions)
         {
-            EState state = EState.Space;
-            StringBuilder sb = new StringBuilder();
             for (int i = 0; i < instructions.Length; i++)
             {
                 char c = instructions[i];
@@ -32,9 +32,7 @@ namespace Compiler
                             {
                                 sb.Append(c);
                             }
-                            Symbol token = new Symbol(sb.ToString(), state);
-                            tokens.Add(token);
-                            sb.Clear();
+                            addToken();
                         }
                         else if (IsLetter(c))
                         {
@@ -69,9 +67,7 @@ namespace Compiler
                         {
                             //<= already taken into consideration. Cannot happen here. This will be a new symbol
                             sb.Append(c);
-                            Symbol token = new Symbol(sb.ToString(), state);
-                            tokens.Add(token);
-                            sb.Clear();
+                            addToken();
                         }
                         else if (IsQuotation(c))
                         {
@@ -84,10 +80,8 @@ namespace Compiler
                     case EState.Num:
                         if (IsWhiteSpace(c))
                         {
-                            Symbol token = new Symbol(sb.ToString(), state);
-                            tokens.Add(token);
+                            addToken();
                             state = EState.Space;
-                            sb.Clear();
                         }
                         else if (IsSymbol(c))
                         {
@@ -98,9 +92,7 @@ namespace Compiler
                             }
                             else
                             {
-                                Symbol token = new Symbol(sb.ToString(), state);
-                                tokens.Add(token);
-                                sb.Clear();
+                                addToken();
                                 sb.Append(c);
                                 state = EState.Symbol;
                             }
@@ -108,9 +100,7 @@ namespace Compiler
                         else if (IsLetter(c))
                         {
                             //The only thing I can think of for valid num is a float like 3.2f, but we aren't using those so meh
-                            Symbol token = new Symbol(sb.ToString(), state);
-                            tokens.Add(token);
-                            sb.Clear();
+                            addToken();
                             //save it as an id even though it makes no sense? idk...
                             sb.Append(c);
                             state = EState.Id;
@@ -118,9 +108,7 @@ namespace Compiler
                         else if (IsQuotation(c))
                         {
                             //this one also makes no sense 1"abvc"?
-                            Symbol token = new Symbol(sb.ToString(), state);
-                            tokens.Add(token);
-                            sb.Clear();
+                            addToken();
                             //save it as a string even though it makes no sense? idk...
                             sb.Append(c);
                             state = EState.Id;
@@ -139,9 +127,7 @@ namespace Compiler
                         else if (IsQuotation(c))
                         {
                             sb.Append(c);
-                            Symbol token = new Symbol(sb.ToString(), state);
-                            tokens.Add(token);
-                            sb.Clear();
+                            addToken();
                             state = EState.Space;
                         }
                         else if (IsSymbol(c))
@@ -160,9 +146,7 @@ namespace Compiler
                     case EState.Id:
                         if (IsWhiteSpace(c))
                         {
-                            Symbol token = new Symbol(sb.ToString(), state);
-                            tokens.Add(token);
-                            sb.Clear();
+                            addToken();
                             state = EState.Space;
                         }
                         else if (IsSymbol(c))
@@ -175,9 +159,7 @@ namespace Compiler
                             else
                             {
                                 //otherwise it's a new symbol. Example: (abc);
-                                Symbol token = new Symbol(sb.ToString(), state);
-                                tokens.Add(token);
-                                sb.Clear();
+                                addToken();
                                 //Need to think of a better way to handle these symbols.
                                 //For now. Hax
                                 i--;
@@ -203,38 +185,35 @@ namespace Compiler
                 //state machine
         }
 
+        public void addToken()
+        {
+            if (sb.Length > 0)
+            {
+                Symbol token = new Symbol(sb.ToString(), state);
+                tokens.Add(token);
+                sb.Clear();
+            }
+        }
         public bool IsWhiteSpace(char c)
         {
-            bool isWhiteSpace = false;
-            return isWhiteSpace;
+            return c == ' ';
         }
-
         public bool IsSymbol(char c)
         {
-            bool isSymbol = false;
-
-            return isSymbol;
+            return char.IsSymbol(c);
         }
-
         public bool IsNum(char c)
         {
-            bool isNum = false;
-
-            return isNum;
+            return char.IsNumber(c);
         }
 
         public bool IsQuotation(char c)
         {
-            bool isQuotation = false;
-
-            return isQuotation;
+            return c == '"';
         }
-
         public bool IsLetter(char c)
         {
-            bool isLetter = false;
-
-            return isLetter;
+            return char.IsLetter(c);
         }
     }
 }
