@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Compiler
 {
-    enum eState
+    public enum EState
     {
-        SYMBOL,
-        STRING,
-        NUM,
-        SPACE,
-        ID
+        Symbol,
+        String,
+        Num,
+        Space,
+        Id
     };
 }

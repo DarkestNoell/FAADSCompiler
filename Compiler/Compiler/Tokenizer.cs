@@ -8,54 +8,114 @@ namespace Compiler
 {
     class Tokenizer
     { //shalom
-        enum Types
-        {
-            Id,
-            Symbol,
-            Num,
-            String,
-            Space
-        };
 
+        List<Symbol> tokens = new List<Symbol>();
         public void Tokenize(string instructions)
         {
-            Types state = Types.Space;
-            ;
+            EState state = EState.Space;
+            StringBuilder sb = new StringBuilder();
             for (int i = 0; i < instructions.Length; i++)
             {
                 char c = instructions[i];
                 switch (state)
                 {
-                    case Types.Space:
+                    case EState.Space:
                         if (IsWhiteSpace(c))
                         {
                             //do nothing
                         }
-                        if (IsSymbol(c))
+                        else if (IsSymbol(c))
                         {
-                            state = Types.Symbol;
+                            state = EState.Symbol;
                         }
-                        if (IsLetter(c))
+                        else if (IsLetter(c))
                         {
-                            state = Types.Id;
+                            state = EState.Id;
                         }
-                        if (IsQuotation(c))
+                        else if (IsQuotation(c))
                         {
-                            state = Types.String;
+                            state = EState.String;
+                        }else if (IsNum(c))
+                        {
+                            
                         }
 
                         break;
-                    case Types.Symbol:
+                    case EState.Symbol:
+                        if (IsWhiteSpace(c))
+                        {
+                            Symbol token = new Symbol(sb.ToString(), state);
+                            tokens.Add(token);
+                            state = EState.Space;
+                            sb.Clear();
+                        }
+                        else if (IsLetter(c))
+                        {
+                            
+                        }
+                        else if (IsSymbol(c))
+                        {
+                        }
+                        else if (IsQuotation(c))
+                        {
+                        }
 
                         break;
-                    case Types.Num:
+                    case EState.Num:
+                        if (IsWhiteSpace(c))
+                        {
+                        }
+                        else if (IsSymbol(c))
+                        {
+                        }
+                        else if (IsLetter(c))
+                        {
+                        }
+                        else if (IsQuotation(c))
+                        {
+                        }
+                        else if (IsNum(c))
+                        {
 
+                        }
                         break;
-                    case Types.String:
+                    case EState.String:
+                        if (IsWhiteSpace(c))
+                        {
+                            //do nothing
+                        }
+                        else if (IsSymbol(c))
+                        {
+                            
+                        }
+                        else if (IsLetter(c))
+                        {
+                        }
+                        else if (IsQuotation(c))
+                        {
+                        }
+                        else if (IsNum(c))
+                        {
 
+                        }
                         break;
-                    case Types.Id:
+                    case EState.Id:
+                        if (IsWhiteSpace(c))
+                        {
+                        }
+                        else if (IsSymbol(c))
+                        {
+                        }
+                        else if (IsLetter(c))
+                        {
+                        }
+                        else if (IsQuotation(c))
+                        {
+                        }
+                        else if (IsNum(c))
+                        {
 
+                        }
                         break;
                 }
             }

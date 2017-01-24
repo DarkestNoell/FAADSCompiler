@@ -11,7 +11,7 @@ namespace Compiler
         public Token() { }
         string name { get; set; }
 
-        eState type { get; set; }
+        EState type { get; set; }
 
     }
 }

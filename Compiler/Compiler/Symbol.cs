@@ -8,12 +8,12 @@ namespace Compiler
 {
     public class Symbol
     {
-        private string name;
-        private string type;
+        private string value;
+        private EState type;
 
-        public Symbol(string name, string type)
+        public Symbol(string value, EState type)
         {
-            this.name = name;
+            this.value = value;
             this.type = type;
         }
     }
