@@ -19,6 +19,36 @@ namespace Compiler
 
         public void Tokenize(string instructions)
         {
+            Types state = Types.Space;
+            ;
+            for (int i = 0; i < instructions.Length; i++)
+            {
+                switch (state)
+                {
+                    case Types.Space:
+                        //if white space
+
+                        //if symbol
+
+                        //if num
+
+                        //if string
+
+                        break;
+                    case Types.Symbol:
+
+                        break;
+                    case Types.Num:
+
+                        break;
+                    case Types.String:
+
+                        break;
+                    case Types.Id:
+
+                        break;
+                }
+            }
             //loop thru each char
                 //state machine
         }
