@@ -23,16 +23,26 @@ namespace Compiler
             ;
             for (int i = 0; i < instructions.Length; i++)
             {
+                char c = instructions[i];
                 switch (state)
                 {
                     case Types.Space:
-                        //if white space
-
-                        //if symbol
-
-                        //if num
-
-                        //if string
+                        if (isWhiteSpace(c))
+                        {
+                            //do nothing
+                        }
+                        if (isSymbol(c))
+                        {
+                            state = Types.Symbol;
+                        }
+                        if (isLetter(c))
+                        {
+                            state = Types.Id;
+                        }
+                        if (isQuotation(c))
+                        {
+                            state = Types.String;
+                        }
 
                         break;
                     case Types.Symbol:
@@ -51,6 +61,31 @@ namespace Compiler
             }
             //loop thru each char
                 //state machine
+        }
+
+        public bool isWhiteSpace(char c)
+        {
+            
+        }
+
+        public bool isSymbol(char c)
+        {
+
+        }
+
+        public bool isNum(char c)
+        {
+
+        }
+
+        public bool isQuotation(char c)
+        {
+
+        }
+
+        public bool isLetter(char c)
+        {
+
         }
     }
 }
