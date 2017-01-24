@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Compiler
 {
-    class Program
+    class Token
     {
-        // take in input from the file and generate tokens for each one
-        static void Main(string[] args)
-        {
+        public Token() { }
+        string name { get; set; }
 
-        }
+        eState type { get; set; }
+
     }
 }
