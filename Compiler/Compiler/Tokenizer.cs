@@ -144,6 +144,7 @@ namespace Compiler
                         }
                         break;
                     case EState.Id:
+                        //Console.WriteLine("State is Id. Char is: " + c);
                         if (IsWhiteSpace(c))
                         {
                             addToken();
@@ -151,6 +152,7 @@ namespace Compiler
                         }
                         else if (IsSymbol(c))
                         {
+                            //Console.WriteLine("Symbol found: " + c);
                             //example abc_de
                             if (c == '_')
                             {
@@ -200,7 +202,7 @@ namespace Compiler
         }
         public bool IsSymbol(char c)
         {
-            return char.IsSymbol(c);
+            return char.IsSymbol(c) || char.IsPunctuation(c);
         }
         public bool IsNum(char c)
         {
@@ -214,6 +216,14 @@ namespace Compiler
         public bool IsLetter(char c)
         {
             return char.IsLetter(c);
+        }
+
+        public void ListAllTokens()
+        {
+            for (int i = 0; i < tokens.Count; i++)
+            {
+                Console.WriteLine(tokens[i]);
+            }
         }
     }
 }

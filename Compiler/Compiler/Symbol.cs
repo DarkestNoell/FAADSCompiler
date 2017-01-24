@@ -16,5 +16,10 @@ namespace Compiler
             this.value = value;
             this.type = type;
         }
+
+        public override string ToString()
+        {
+            return String.Format("Value: {0}, Type: {1}", value, type);
+        }
     }
 }
