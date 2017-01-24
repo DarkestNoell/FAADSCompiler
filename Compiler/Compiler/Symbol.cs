@@ -8,15 +8,13 @@ namespace Compiler
 {
     public class Symbol
     {
-        private String Name;
-        private String Type;
-        private String Attribute;
+        private string name;
+        private string type;
 
-        public Symbol(String name, String type, String attribute)
+        public Symbol(string name, string type)
         {
-            this.Name = name;
-            this.Type = type;
-            this.Attribute = attribute;
+            this.name = name;
+            this.type = type;
         }
     }
 }
