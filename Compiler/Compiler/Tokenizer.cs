@@ -9,113 +9,30 @@ namespace Compiler
     class Tokenizer
     { //shalom
 
-        List<Symbol> tokens = new List<Symbol>();
+        private List<Symbol> tokens = new List<Symbol>();
+        private StringBuilder sb = new StringBuilder();
+        private EState state = EState.Space;
         public void Tokenize(string instructions)
         {
-            EState state = EState.Space;
-            StringBuilder sb = new StringBuilder();
             for (int i = 0; i < instructions.Length; i++)
             {
                 char c = instructions[i];
                 switch (state)
                 {
                     case EState.Space:
-                        if (IsWhiteSpace(c))
-                        {
-                            //do nothing
-                        }
-                        else if (IsSymbol(c))
-                        {
-                            state = EState.Symbol;
-                        }
-                        else if (IsLetter(c))
-                        {
-                            state = EState.Id;
-                        }
-                        else if (IsQuotation(c))
-                        {
-                            state = EState.String;
-                        }else if (IsNum(c))
-                        {
-                            
-                        }
-
+                        tokenizeStringBuild(c);
                         break;
                     case EState.Symbol:
-                        if (IsWhiteSpace(c))
-                        {
-                            Symbol token = new Symbol(sb.ToString(), state);
-                            tokens.Add(token);
-                            state = EState.Space;
-                            sb.Clear();
-                        }
-                        else if (IsLetter(c))
-                        {
-                            
-                        }
-                        else if (IsSymbol(c))
-                        {
-                        }
-                        else if (IsQuotation(c))
-                        {
-                        }
-
+                        tokenizeStringBuild(c);
                         break;
                     case EState.Num:
-                        if (IsWhiteSpace(c))
-                        {
-                        }
-                        else if (IsSymbol(c))
-                        {
-                        }
-                        else if (IsLetter(c))
-                        {
-                        }
-                        else if (IsQuotation(c))
-                        {
-                        }
-                        else if (IsNum(c))
-                        {
-
-                        }
+                        tokenizeStringBuild(c);
                         break;
                     case EState.String:
-                        if (IsWhiteSpace(c))
-                        {
-                            //do nothing
-                        }
-                        else if (IsSymbol(c))
-                        {
-                            
-                        }
-                        else if (IsLetter(c))
-                        {
-                        }
-                        else if (IsQuotation(c))
-                        {
-                        }
-                        else if (IsNum(c))
-                        {
-
-                        }
+                        tokenizeStringBuild(c);
                         break;
                     case EState.Id:
-                        if (IsWhiteSpace(c))
-                        {
-                        }
-                        else if (IsSymbol(c))
-                        {
-                        }
-                        else if (IsLetter(c))
-                        {
-                        }
-                        else if (IsQuotation(c))
-                        {
-                        }
-                        else if (IsNum(c))
-                        {
-
-                        }
+                        tokenizeStringBuild(c);
                         break;
                 }
             }
@@ -123,38 +40,65 @@ namespace Compiler
                 //state machine
         }
 
+        public void tokenizeStringBuild(char c)
+        {
+            if (IsWhiteSpace(c))
+            {
+                addToken();
+                state = EState.Space;
+            }
+            else if (IsSymbol(c))
+            {
+                addToken();
+                state = EState.Symbol;
+                Symbol token2 = new Symbol(sb.ToString(), state);
+                tokens.Add(token2);
+            }
+            else if (IsLetter(c))
+            {
+                state = EState.Id;
+                sb.Append(c);
+            }
+            else if (IsQuotation(c))
+            {
+                state = EState.String;
+                addToken();
+            }
+            else if (IsNum(c))
+            {
+                state = EState.Num;
+                sb.Append(c);
+            }
+        }
+        public void addToken()
+        {
+            if (sb.Length > 0)
+            {
+                Symbol token = new Symbol(sb.ToString(), state);
+                tokens.Add(token);
+                sb.Clear();
+            }
+        }
         public bool IsWhiteSpace(char c)
         {
-            bool isWhiteSpace = false;
-            return isWhiteSpace;
+            return c == ' ';
         }
-
         public bool IsSymbol(char c)
         {
-            bool isSymbol = false;
-
-            return isSymbol;
+            return char.IsSymbol(c);
         }
-
         public bool IsNum(char c)
         {
-            bool isNum = false;
-
-            return isNum;
+            return char.IsNumber(c);
         }
 
         public bool IsQuotation(char c)
         {
-            bool isQuotation = false;
-
-            return isQuotation;
+            return c == '"';
         }
-
         public bool IsLetter(char c)
         {
-            bool isLetter = false;
-
-            return isLetter;
+            return char.IsLetter(c);
         }
     }
 }
