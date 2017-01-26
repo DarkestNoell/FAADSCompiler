@@ -9,7 +9,7 @@ namespace Compiler
     class VariableNode : TreeNode
     {
         //Not allowing for custom objects at this time
-        public enum Type { Integer, String, Double }
+        public enum Type { Integer, String, Double, Void }
 
         private Type variableType;
         private string variableName;

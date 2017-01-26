@@ -10,10 +10,19 @@ namespace Compiler
     {
         private List<Symbol> tokens;
         private TreeNode globalNode;
+
+        private List<Context> contextList;
         public TreeParser(List<Symbol> tokens)
         {
             this.tokens = tokens;
             globalNode = new TreeNode();
+            contextList = new List<Context>();
+        }
+
+        //We will use this to set pre-loaded methods
+        private void InitContexts()
+        {
+            contextList.Add(new Context("WriteLine", VariableNode.Type.Void, true));
         }
 
         //This is where it starts. Attach all nodes to global node declared above. ^
@@ -60,5 +69,6 @@ namespace Compiler
 
             return null;
         }
+
     }
 }

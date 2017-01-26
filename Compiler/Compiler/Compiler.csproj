@@ -45,10 +45,12 @@
   <ItemGroup>
     <Compile Include="AssignVariableNode.cs" />
     <Compile Include="CompilerModel.cs" />
+    <Compile Include="Context.cs" />
     <Compile Include="DeclareFunctionNode.cs" />
     <Compile Include="DeclareVariableNode.cs" />
     <Compile Include="eState.cs" />
     <Compile Include="IfNode.cs" />
+    <Compile Include="Keywords.cs" />
     <Compile Include="LexiconAnalyzer.cs" />
     <Compile Include="LoopNode.cs" />
     <Compile Include="obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />

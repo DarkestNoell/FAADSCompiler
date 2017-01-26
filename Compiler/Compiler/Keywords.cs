@@ -11,16 +11,13 @@ namespace Compiler
         public enum keys
         {
             VOID,
-            MAIN,
             DOUBLE,
             INT,
             FOR,
             IF,
             ELSE,
-            WRITELINE,
             WHILE,
             RETURN,
-            ARGS,
 
 
 
