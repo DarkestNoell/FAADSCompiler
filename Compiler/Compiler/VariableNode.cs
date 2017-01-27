@@ -9,18 +9,18 @@ namespace Compiler
     class VariableNode : TreeNode
     {
         //Not allowing for custom objects at this time
-        public enum Type { Integer, String, Double, Void }
+        
 
-        private Type variableType;
+        private VariableType.Type variableType;
         private string variableName;
 
-        public VariableNode(Type variableType, string variableName)
+        public VariableNode(VariableType.Type variableType, string variableName)
         {
             this.variableType = variableType;
             this.variableName = variableName;
         }
 
-        public Type GetVariableType()
+        public VariableType.Type GetVariableType()
         {
             return variableType;
         }

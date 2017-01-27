@@ -67,6 +67,7 @@
     <Compile Include="TreeParser.cs" />
     <Compile Include="ValueNode.cs" />
     <Compile Include="VariableNode.cs" />
+    <Compile Include="VariableType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -10,12 +10,14 @@ namespace Compiler
     {
         private string functionName;
         //Should probably move this enum to it's own file or something
-        private VariableNode.Type returnType;
+        private VariableType.Type returnType;
 
-        public DeclareFunctionNode(TreeNode paramsNode, TreeNode body)
+        public DeclareFunctionNode(TreeNode paramsNode, TreeNode body, string functionName, VariableType.Type returnType)
         {
             AddTreeNode(paramsNode);
             AddTreeNode(body);
+            this.functionName = functionName;
+            this.returnType = returnType;
         }
 
         public TreeNode GetBody()
