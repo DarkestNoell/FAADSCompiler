@@ -24,7 +24,7 @@ namespace Compiler
         //We will use this to set pre-loaded methods
         private void InitContexts()
         {
-            contextList.Add(new Context("WriteLine", VariableNode.Type.Void, true));
+            contextList.Add(new Context("WriteLine", VariableType.Type.Void, true));
         }
 
         //This is where it starts. Attach all nodes to global node declared above. ^

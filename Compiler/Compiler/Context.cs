@@ -11,12 +11,12 @@ namespace Compiler
 
         private string name;
         
-        private VariableNode.Type variableType;
+        private VariableType.Type variableType;
 
         private bool function;
 
         //Context defaults as a variable. Add true at the end of constructor to set function
-        public Context(string name, VariableNode.Type variableType, bool function = false)
+        public Context(string name, VariableType.Type variableType, bool function = false)
         {
             this.name = name;
             this.variableType = variableType;
@@ -28,7 +28,7 @@ namespace Compiler
             return name;
         }
 
-        public VariableNode.Type GetVariableType()
+        public VariableType.Type GetVariableType()
         {
             return variableType;
         }
