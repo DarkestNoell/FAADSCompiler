@@ -21,5 +21,15 @@ namespace Compiler
         {
             return String.Format("Value: {0}, Type: {1}", value, type);
         }
+
+        public string GetValue()
+        {
+            return value;
+        }
+
+        public EState GetType()
+        {
+            return type;
+        }
     }
 }

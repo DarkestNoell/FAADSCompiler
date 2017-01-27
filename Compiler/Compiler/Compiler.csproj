@@ -50,7 +50,7 @@
     <Compile Include="DeclareVariableNode.cs" />
     <Compile Include="eState.cs" />
     <Compile Include="IfNode.cs" />
-    <Compile Include="Keywords.cs" />
+    <Compile Include="Keyword.cs" />
     <Compile Include="LexiconAnalyzer.cs" />
     <Compile Include="LoopNode.cs" />
     <Compile Include="obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
