@@ -228,30 +228,81 @@ namespace Compiler
         //CallFunction Node may need to be made it's own class
         private TreeNode ParseCallFunctionNode(Symbol nameToken)
         {
-            return null;
+            List<TreeNode> paramNodes = new List<TreeNode>();
+            while (!tokens[tokenCounter].GetValue().Equals(")"))
+            {
+                paramNodes.Add(ParseValueOrContextNode());
+            }
+            
+            return new CallFunctionNode(nameToken.GetValue(), paramNodes);
         }
-        //assuming we have found if(
+        //assuming we have found if
         private IfNode ParseIfNode()
         {
-
-            return null;
+            PredicateNode predicateNode = null;
+            TreeNode bodyNode = null;
+            if (tokens[tokenCounter].GetValue().Equals("("))
+            {
+                tokenCounter++;
+                predicateNode = ParsePredicateNode();
+                while (!tokens[tokenCounter].GetValue().Equals("}"))
+                {
+                    bodyNode = ParseBody();
+                }
+                while (tokens[tokenCounter].GetValue().Equals("else"))
+                {
+                    //set up elses
+                }
+            }
+            else
+            {
+                //throw error
+            }
+            return new IfNode(predicateNode, bodyNode);
         }
 
         private LoopNode ParseLoopNode()
         {
-
-            return null;
+            PredicateNode predicateNode = null;
+            TreeNode bodyNode = null;
+            //just going to assume a while loop for now. Will get to the others later.
+            if (tokens[tokenCounter].GetValue().Equals("("))
+            {
+                tokenCounter++;
+                predicateNode = ParsePredicateNode();
+                while (!tokens[tokenCounter].GetValue().Equals("}"))
+                {
+                    bodyNode = ParseBody();
+                }
+            }
+            else
+            {
+                //throw error
+            }
+            return new LoopNode(predicateNode, bodyNode);
         }
 
         //assuming we found int abc
         private DeclareVariableNode ParseDeclareVariableNode(Symbol typeToken, Symbol nameToken)
         {
-
+            
             return null;
         }
 
         //Assuming we found a stored context (example: abc)
         private AssignVariableNode ParseAssignVariableNode(Symbol nameToken)
+        {
+
+            return null;
+        }
+
+        private TreeNode ParseValueOrContextNode()
+        {
+
+            return null;
+        }
+
+        private PredicateNode ParsePredicateNode()
         {
 
             return null;
