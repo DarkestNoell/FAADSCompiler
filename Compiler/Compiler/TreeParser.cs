@@ -138,10 +138,11 @@ namespace Compiler
             while (!tokens[tokenCounter].GetValue().Equals("}"))
             {
                 Symbol currentToken = tokens[tokenCounter];
-                //if token is a variable declaration or assignment
+                //if token is pretty much anything valid since starting with 'blah', 345, or /*( is crap
                 if (currentToken.GetType() == EState.Id)
                 {
                     Keyword.Key keyword;
+                    //if it is a keyword (variable type, condition, loop)
                     if (Enum.TryParse(currentToken.GetValue(), true, out keyword))
                     {
                         //declaring variable
@@ -174,18 +175,27 @@ namespace Compiler
                             {
                                 //error next one is not id or does not have paren after
                             }
-
+                        //else if it is a conditional
+                        }
+                        else if (currentToken.GetValue().Equals("if"))
+                        {
+                            bodyNode.AddTreeNode(ParseIfNode());
+                        }
+                        //else if it is a loop
+                        else if (new [] {"while", "for", "do"}.Contains(currentToken.GetValue()))
+                        {
+                            bodyNode.AddTreeNode(ParseLoopNode());
                         }
                         else
                         {
                             //error
                         }
                     }
-                    else
+                    else //if it is an assignment or function call (is in context table)
                     {
-                        //if it is an assignment or function call (is in context table)
                         Symbol nameToken = currentToken;
                         tokenCounter++;
+                        //if it is an assignment
                         if (tokens[tokenCounter].GetValue().Equals("="))
                         {
                             if (contextList.Any(x => x.GetName().Equals(nameToken.GetValue()) && !x.IsFunction()))
@@ -193,6 +203,7 @@ namespace Compiler
                                 bodyNode.AddTreeNode(ParseAssignVariableNode(nameToken));
                             }
                         }
+                        //if it is function call
                         else if (tokens[tokenCounter].GetValue().Equals("("))
                         {
                             if (contextList.Any(x => x.GetName().Equals(nameToken.GetValue()) && x.IsFunction()))
@@ -200,7 +211,15 @@ namespace Compiler
                                 bodyNode.AddTreeNode(ParseCallFunctionNode(nameToken));
                             }
                         }
+                        else
+                        {
+                            //error invalid
+                        }
                     }
+                }
+                else
+                {
+                    //error invalid
                 }
             }
             return null;
