@@ -361,12 +361,59 @@ namespace Compiler
             return new AssignVariableNode(valnode,varnode);
         }
 
+        private string[] maths = new[] {"/", "+", "-", "*"};
+        // (A * A + i) / (2 * A);
         private TreeNode ParseValueOrContextNode()
         {
+            ValueNode valueNodeToReturn = null;
+            int endParen = 1;
+            //1 + 2
+            if (tokens[tokenCounter].GetType() == EState.Num)
+            {
+                int value1 = Int32.Parse(tokens[tokenCounter].GetValue());
+                tokenCounter++;
+                if (maths.Contains(tokens[tokenCounter].GetValue()))
+                {
+                    string math = tokens[tokenCounter].GetValue();
+                    tokenCounter++;
+                    valueNodeToReturn = new ValueNode(new ValueNode(value1), new MathNode(math), ParseValueOrContextNode());
+                }
+                else
+                {
+                        valueNodeToReturn = new ValueNode(value1);
+                }
+            }
+            else if (tokens[tokenCounter].GetType() == EState.Id)
+            {
+                string context = tokens[tokenCounter].GetValue();
+                tokenCounter++;
+                if (maths.Contains(tokens[tokenCounter].GetValue()))
+                {
+                    string math = tokens[tokenCounter].GetValue();
+                    tokenCounter++;
+                    valueNodeToReturn = new ValueNode(new ContextNode(context), new MathNode(math), ParseValueOrContextNode());
+                }
+                else
+                {
+                    valueNodeToReturn = new ValueNode(new ContextNode(context), null, null);
+                }
+            }
+            else if (tokens[tokenCounter].GetValue().Equals("("))
+            {
+                endParen++;
+            }
+            else if (tokens[tokenCounter].GetValue().Equals(")"))
+            {
+                endParen--;
+            }
+            tokenCounter++;
+           
+            //A + 2
 
-            return null;
+            return valueNodeToReturn;
         }
 
+        //(Abs(A - B) > E)
         private PredicateNode ParsePredicateNode()
         {
 
