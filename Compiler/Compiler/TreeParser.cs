@@ -52,6 +52,7 @@ namespace Compiler
                                 if (Enum.TryParse(currentToken.GetValue(), true, out holder))
                                 {
                                     //Error next one can't be keyword
+                                    throw new Exception("Error: next token cannot be a keyword");
                                 }
                                 else if (currentToken.GetType() == EState.Id)
                                 {
@@ -70,24 +71,27 @@ namespace Compiler
                                 else
                                 {
                                     //error next one is not id or does not have paren after
+                                    throw new Exception("Error: next one is not id or does not have paren after");
                                 }
 
                             }
                             else
                             {
                                 //error
+                                throw new Exception();
                             }
                         }
                     }
                     else
                     {
                         //error
+                        throw new Exception();
                     }
                 }
             }
             catch (Exception e)
             {
-                
+                Console.WriteLine(e.StackTrace);
             }
 
         }
@@ -114,6 +118,7 @@ namespace Compiler
                 else
                 {
                     //error not a variable type
+                    throw new Exception("Error: not a variable type");
                 }
             }
             tokenCounter++;
@@ -124,6 +129,7 @@ namespace Compiler
             else
             {
                 //error needs bracket
+                throw new Exception("Error: need bracket");
             }
             VariableType.Type funcVariableType = VariableType.GetVariableTypeFromString(returnTypeToken.GetValue());
             contextList.Add(new Context(functionNameToken.GetValue(), funcVariableType));
@@ -159,6 +165,7 @@ namespace Compiler
                             if (Enum.TryParse(variableNameToken.GetValue(), true, out holder))
                             {
                                 //Error variable name can't be keyword
+                                throw new Exception("Error: next token cannot be a keyword");
                             }
                             else if (variableNameToken.GetType() == EState.Id)
                             {
@@ -172,11 +179,13 @@ namespace Compiler
                                 else
                                 {
                                     //error needs =
+                                    throw new Exception("Error: did not find a  '=' ");
                                 }
                             }
                             else
                             {
                                 //error next one is not id or does not have paren after
+                                throw new Exception("Error: next token was neither a id nor does have a ')' after it ");
                             }
                         //else if it is a conditional
                         }
@@ -192,6 +201,7 @@ namespace Compiler
                         else
                         {
                             //error
+                            throw new Exception();
                         }
                     }
                     else //if it is an assignment or function call (is in context table)
@@ -217,12 +227,14 @@ namespace Compiler
                         else
                         {
                             //error invalid
+                            throw new Exception("Error: invalid");
                         }
                     }
                 }
                 else
                 {
                     //error invalid
+                    throw new Exception("Error: invalid");
                 }
             }
             return null;
@@ -260,6 +272,7 @@ namespace Compiler
             else
             {
                 //throw error
+                throw new Exception();
             }
             return new IfNode(predicateNode, bodyNode);
         }
@@ -281,6 +294,7 @@ namespace Compiler
             else
             {
                 //throw error
+                throw new Exception();
             }
             return new LoopNode(predicateNode, bodyNode);
         }
@@ -288,15 +302,73 @@ namespace Compiler
         //assuming we found int abc
         private DeclareVariableNode ParseDeclareVariableNode(Symbol typeToken, Symbol nameToken)
         {
-            
-            return null;
+           // ValueNode value = new ValueNode();
+            VariableNode variable = null; //variable type and variable name
+            ValueNode value = null;
+            while (!tokens[tokenCounter].GetValue().Equals(";"))
+            {
+                if(typeToken.GetType().Equals(EState.Id))
+                {
+                    variable = new VariableNode(VariableType.Type.String, nameToken.GetValue());
+                    value = ParseValueNode();
+                }
+                else if (typeToken.GetType().Equals(EState.Num))
+                {
+                    variable = new VariableNode(VariableType.Type.String, nameToken.GetValue());
+                    value = ParseValueNode();
+                }
+                else if (typeToken.GetType().Equals(EState.Space))
+                {
+                    variable = new VariableNode(VariableType.Type.String, nameToken.GetValue());
+                    value = ParseValueNode();
+                }
+                else if (typeToken.GetType().Equals(EState.String))
+                {
+                    variable = new VariableNode(VariableType.Type.String, nameToken.GetValue());
+                    value = ParseValueNode();
+                }
+                else if (typeToken.GetType().Equals(EState.Symbol))
+                {
+                    variable = new VariableNode(VariableType.Type.String, nameToken.GetValue());
+                    value = ParseValueNode();
+                }
+                else {
+                    //Throw error
+                    throw new Exception("ERROR: token is not of type declare variable node ");
+                }
+                tokenCounter++;
+            }
+
+            tokenCounter++;
+            //Value node, and a variable node
+            return new DeclareVariableNode(value,variable);
         }
 
         //Assuming we found a stored context (example: abc)
         private AssignVariableNode ParseAssignVariableNode(Symbol nameToken)
         {
+            //Value node
+            ValueNode valnode = null;
+            VariableNode varnode = null;
+            //the variable name "a"
+                //
+            //the "=" 
+                //
+            //value type;
+            
+            if(nameToken.GetType().Equals(EState.Id) && !tokens[tokenCounter].GetValue().Equals(";"))
+              {
+                varnode = new VariableNode(VariableType.Type.String,tokens[tokenCounter].GetValue());
+                tokenCounter++; 
+              }
+            else if (nameToken.GetType().Equals(EState.Num) && !tokens[tokenCounter].GetValue().Equals(";"))
+              {
 
-            return null;
+                valnode = ParseValueNode();
+                tokenCounter++; 
+              }
+
+            return new AssignVariableNode(valnode,varnode);
         }
 
         private string[] maths = new[] {"/", "+", "-", "*"};
