@@ -224,12 +224,14 @@ namespace Compiler
                         else
                         {
                             //error invalid
+                            throw new Exception("Error: invalid");
                         }
                     }
                 }
                 else
                 {
                     //error invalid
+                    throw new Exception("Error: invalid");
                 }
             }
             return null;
@@ -267,6 +269,7 @@ namespace Compiler
             else
             {
                 //throw error
+                throw new Exception();
             }
             return new IfNode(predicateNode, bodyNode);
         }
@@ -288,6 +291,7 @@ namespace Compiler
             else
             {
                 //throw error
+                throw new Exception();
             }
             return new LoopNode(predicateNode, bodyNode);
         }
@@ -297,6 +301,7 @@ namespace Compiler
         {
            // ValueNode value = new ValueNode();
             VariableNode variable = null; //variable type and variable name
+            ValueNode value = null;
             while (!tokens[tokenCounter].GetValue().Equals(";"))
             {
                 if(typeToken.GetType().Equals(EState.Id))
@@ -314,7 +319,7 @@ namespace Compiler
                     variable = new VariableNode(VariableType.Type.String, nameToken.GetValue());
                 }
                 else if (typeToken.GetType().Equals(EState.Symbol)) {
-                    variable = new VariableNode(VariableType.Type., nameToken.GetValue());
+                    variable = new VariableNode(VariableType.Type.String, nameToken.GetValue());
                 }
                 else {
                     //Throw error
@@ -331,18 +336,26 @@ namespace Compiler
         //Assuming we found a stored context (example: abc)
         private AssignVariableNode ParseAssignVariableNode(Symbol nameToken)
         {
-            //create  Node called variable node and return it
-            //parse a variable node here is the variable and find the node for it.
-            //value you are asising to and variable node which is the variable name.
+            //Value node
+            ValueNode valnode = null;
+            VariableNode varnode = null;
             //the variable name "a"
                 //
             //the "=" 
                 //
             //value type;
-            var token = nameToken;
-            string name = "Alex";
-            ValueNode valnode = new ValueNode();
-            VariableNode varnode = new VariableNode(VariableType.Type.String,name);
+            while(!tokens[tokenCounter].GetValue().Equals(";"))
+            {
+                if(nameToken.GetType().Equals(EState.Id))
+                {
+                  varnode = new VariableNode(VariableType.Type.String,tokens[tokenCounter].GetValue());
+                }
+                else if (nameToken.GetType().Equals(EState.Num))
+                {
+                    valnode = new ValueNode(tokens[tokenCounter].GetValue());
+                }
+                tokenCounter++; 
+            }
 
 
             return new AssignVariableNode(valnode,varnode);
