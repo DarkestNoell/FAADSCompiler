@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 namespace Compiler
 {
     class DeclareVariableNode : TreeNode
-    {
-        //Maybe we could combine assign and declare nodes and just have a variable that says if it's assigning or declaring?
+    { 
+       //Maybe we could combine assign and declare nodes and just have a variable that says if it's assigning or declaring?
         public DeclareVariableNode(ValueNode valueNode, VariableNode variableNode)
         {
             AddTreeNode(valueNode);
