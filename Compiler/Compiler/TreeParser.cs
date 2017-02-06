@@ -344,19 +344,18 @@ namespace Compiler
             //the "=" 
                 //
             //value type;
-            while(!tokens[tokenCounter].GetValue().Equals(";"))
-            {
-                if(nameToken.GetType().Equals(EState.Id))
-                {
-                  varnode = new VariableNode(VariableType.Type.String,tokens[tokenCounter].GetValue());
-                }
-                else if (nameToken.GetType().Equals(EState.Num))
-                {
-                    valnode = new ValueNode(tokens[tokenCounter].GetValue());
-                }
+            
+            if(nameToken.GetType().Equals(EState.Id) && !tokens[tokenCounter].GetValue().Equals(";"))
+              {
+                varnode = new VariableNode(VariableType.Type.String,tokens[tokenCounter].GetValue());
                 tokenCounter++; 
-            }
+              }
+            else if (nameToken.GetType().Equals(EState.Num) && !tokens[tokenCounter].GetValue().Equals(";"))
+              {
 
+                valnode = ParseValueOrContextNode();
+                tokenCounter++; 
+              }
 
             return new AssignVariableNode(valnode,varnode);
         }
