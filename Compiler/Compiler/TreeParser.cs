@@ -98,6 +98,7 @@ namespace Compiler
             TreeNode paramsNode = new TreeNode();
             TreeNode bodyNode = new TreeNode();
 
+
             while (!tokens[tokenCounter].GetValue().Equals(")"))
             {
                 Symbol typeToken = tokens[tokenCounter];
@@ -124,8 +125,10 @@ namespace Compiler
             {
                 //error needs bracket
             }
-            DeclareFunctionNode declareFunctionNode = new DeclareFunctionNode(paramsNode, bodyNode, functionNameToken.GetValue(), 
-                VariableType.GetVariableTypeFromString(returnTypeToken.GetValue()));
+            VariableType.Type funcVariableType = VariableType.GetVariableTypeFromString(returnTypeToken.GetValue());
+            contextList.Add(new Context(functionNameToken.GetValue(), funcVariableType));
+            DeclareFunctionNode declareFunctionNode = new DeclareFunctionNode(paramsNode, bodyNode, functionNameToken.GetValue(),
+                funcVariableType);
             return declareFunctionNode;
         }
 
@@ -231,7 +234,7 @@ namespace Compiler
             List<TreeNode> paramNodes = new List<TreeNode>();
             while (!tokens[tokenCounter].GetValue().Equals(")"))
             {
-                paramNodes.Add(ParseValueOrContextNode());
+                paramNodes.Add(ParseValueNode());
             }
             
             return new CallFunctionNode(nameToken.GetValue(), paramNodes);
@@ -297,11 +300,16 @@ namespace Compiler
         }
 
         private string[] maths = new[] {"/", "+", "-", "*"};
+        //This method needs a refactor. Will not cover all senarios quite right
         // (A * A + i) / (2 * A);
         private ValueNode ParseValueNode()
         {
             ValueNode valueNodeToReturn = null;
-            int endParen = 1;
+
+            if (tokens[tokenCounter].GetValue().Equals("("))
+            {
+                tokenCounter++;
+            }
             //1 + 2
             if (tokens[tokenCounter].GetType() == EState.Num)
             {
@@ -320,38 +328,58 @@ namespace Compiler
             }
             else if (tokens[tokenCounter].GetType() == EState.Id)
             {
-                string context = tokens[tokenCounter].GetValue();
+                Symbol contextToken = tokens[tokenCounter];
+                string context = contextToken.GetValue();
                 tokenCounter++;
+                ContextNode contextNode = new ContextNode(context);
+                if (IsFunction(context))
+                {
+                    if (tokens[tokenCounter].GetValue().Equals("("))
+                    {
+                        tokenCounter++;
+                        contextNode.AddTreeNode(ParseCallFunctionNode(contextToken));
+                    }
+                    else
+                    {
+                        //throw error
+                    }
+
+                }
                 if (maths.Contains(tokens[tokenCounter].GetValue()))
                 {
                     string math = tokens[tokenCounter].GetValue();
                     tokenCounter++;
-                    valueNodeToReturn = new ValueNode(new ContextNode(context), new MathNode(math), ParseValueNode());
+                    valueNodeToReturn = new ValueNode(contextNode, new MathNode(math), ParseValueNode());
                 }
                 else
                 {
-                    valueNodeToReturn = new ValueNode(new ContextNode(context), null, null);
+                    valueNodeToReturn = new ValueNode(contextNode, null, null);
                 }
             }
-            else if (tokens[tokenCounter].GetValue().Equals("("))
+            tokenCounter++;
+            //get past closed parens
+            while (tokens[tokenCounter].GetValue().Equals(")"))
             {
-                endParen++;
+                tokenCounter++;
             }
-            else if (tokens[tokenCounter].GetValue().Equals(")"))
-            {
-                endParen--;
-            }
-            tokenCounter++;           
-            //A + 2
-
+            //get past ;
+            tokenCounter++;
             return valueNodeToReturn;
+        }
+
+        private bool IsFunction(string context)
+        {
+            return contextList.Exists(x => x.GetName().Equals(context) && x.IsFunction());
         }
 
         //(Abs(A - B) > E)
         private PredicateNode ParsePredicateNode()
         {
-
-            return null;
+            ValueNode val1 = ParseValueNode();
+            ConditionNode conditionNode = new ConditionNode(tokens[tokenCounter].GetValue());
+            tokenCounter++;
+            ValueNode val2 = ParseValueNode();
+            return new PredicateNode(val1, conditionNode, val2);
         }
 
     }

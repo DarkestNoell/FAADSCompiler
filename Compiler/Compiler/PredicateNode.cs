@@ -12,7 +12,7 @@ namespace Compiler
         //Not taking ands and ors into account yet, but when it is it will probably be in the IfNode or LoopNode
         // value/context, condition, value/context
         
-        public PredicateNode(TreeNode value1, TreeNode condition, TreeNode value2)
+        public PredicateNode(ValueNode value1, ConditionNode condition, ValueNode value2)
         {
             AddTreeNode(value1);
             AddTreeNode(condition);
