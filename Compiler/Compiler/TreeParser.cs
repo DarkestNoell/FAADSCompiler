@@ -243,7 +243,7 @@ namespace Compiler
             List<TreeNode> paramNodes = new List<TreeNode>();
             while (!tokens[tokenCounter].GetValue().Equals(")"))
             {
-                paramNodes.Add(ParseValueOrContextNode());
+                paramNodes.Add(ParseValueNode());
             }
             
             return new CallFunctionNode(nameToken.GetValue(), paramNodes);
@@ -306,24 +306,32 @@ namespace Compiler
             {
                 if(typeToken.GetType().Equals(EState.Id))
                 {
-                   // var type = Enum.Parse(typeToken.GetType().ToString());
-                   
-                }
-                else if (typeToken.GetType().Equals(EState.Num)) {
-                    
-                }
-                else if (typeToken.GetType().Equals(EState.Space)) {
-                   
-                }
-                else if (typeToken.GetType().Equals(EState.String)) {
                     variable = new VariableNode(VariableType.Type.String, nameToken.GetValue());
+                    value = ParseValueNode();
                 }
-                else if (typeToken.GetType().Equals(EState.Symbol)) {
+                else if (typeToken.GetType().Equals(EState.Num))
+                {
                     variable = new VariableNode(VariableType.Type.String, nameToken.GetValue());
+                    value = ParseValueNode();
+                }
+                else if (typeToken.GetType().Equals(EState.Space))
+                {
+                    variable = new VariableNode(VariableType.Type.String, nameToken.GetValue());
+                    value = ParseValueNode();
+                }
+                else if (typeToken.GetType().Equals(EState.String))
+                {
+                    variable = new VariableNode(VariableType.Type.String, nameToken.GetValue());
+                    value = ParseValueNode();
+                }
+                else if (typeToken.GetType().Equals(EState.Symbol))
+                {
+                    variable = new VariableNode(VariableType.Type.String, nameToken.GetValue());
+                    value = ParseValueNode();
                 }
                 else {
                     //Throw error
-                    throw new Exception();
+                    throw new Exception("ERROR: token is not of type declare variable node ");
                 }
                 tokenCounter++;
             }
@@ -353,7 +361,7 @@ namespace Compiler
             else if (nameToken.GetType().Equals(EState.Num) && !tokens[tokenCounter].GetValue().Equals(";"))
               {
 
-                valnode = ParseValueOrContextNode();
+                valnode = ParseValueNode();
                 tokenCounter++; 
               }
 
