@@ -19,19 +19,19 @@ namespace Compiler
             AddTreeNode(value2);
         }
 
-        public TreeNode GetValueNode1()
+        public ValueNode GetValueNode1()
         {
-            return GetNode(0);
+            return (ValueNode)GetNode(0);
         }
 
-        public TreeNode GetConditionNode()
+        public ConditionNode GetConditionNode()
         {
-            return GetNode(1);
+            return (ConditionNode)GetNode(1);
         }
 
-        public TreeNode GetValueNode2()
+        public ValueNode GetValueNode2()
         {
-            return GetNode(2);
+            return (ValueNode)GetNode(2);
         }
     }
 }

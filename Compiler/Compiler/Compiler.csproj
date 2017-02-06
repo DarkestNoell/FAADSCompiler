@@ -49,6 +49,7 @@
     <Compile Include="ConditionNode.cs" />
     <Compile Include="Context.cs" />
     <Compile Include="ContextNode.cs" />
+    <Compile Include="ContextValue.cs" />
     <Compile Include="DeclareFunctionNode.cs" />
     <Compile Include="DeclareVariableNode.cs" />
     <Compile Include="eState.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="Tokenizer.cs" />
     <Compile Include="TreeNode.cs" />
     <Compile Include="TreeParser.cs" />
+    <Compile Include="TreeRunner.cs" />
     <Compile Include="ValueNode.cs" />
     <Compile Include="VariableNode.cs" />
     <Compile Include="VariableType.cs" />

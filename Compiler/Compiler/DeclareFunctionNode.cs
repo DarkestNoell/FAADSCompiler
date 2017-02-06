@@ -30,5 +30,10 @@ namespace Compiler
         {
             return GetNode(0);
         }
+
+        public string GetFunctionName()
+        {
+            return functionName;
+        }
     }
 }

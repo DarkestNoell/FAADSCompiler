@@ -24,7 +24,7 @@ namespace Compiler
             AddTreeNode(var2Node);
         }
 
-        public object GetValue()
+        public double GetValue()
         {
             return value;
         }

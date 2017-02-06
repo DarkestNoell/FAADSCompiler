@@ -21,6 +21,16 @@ namespace Compiler
             contextList = new List<Context>();
         }
 
+        public TreeNode GetGlobalNode()
+        {
+            return globalNode;
+        }
+
+        public List<Context> GetContextList()
+        {
+            return contextList;
+        }
+
         //We will use this to set pre-loaded methods
         private void InitContexts()
         {
@@ -196,7 +206,26 @@ namespace Compiler
                         //else if it is a loop
                         else if (new [] {"while", "for", "do"}.Contains(currentToken.GetValue()))
                         {
-                            bodyNode.AddTreeNode(ParseLoopNode());
+                            tokenCounter++;
+                            if (tokens[tokenCounter].GetValue().Equals("("))
+                            {
+                                tokenCounter++;
+                                if (currentToken.GetValue().Equals("for"))
+                                {
+                                    Symbol typeToken = tokens[tokenCounter];
+                                    tokenCounter++;
+                                    Symbol nameToken = tokens[tokenCounter];
+                                    tokenCounter++;
+                                    bodyNode.AddTreeNode(ParseDeclareVariableNode(typeToken, nameToken));
+                                }
+                                bodyNode.AddTreeNode(ParseLoopNode(currentToken));
+
+                            }
+                            else
+                            {
+                                //throw error
+                                throw new Exception();
+                            }
                         }
                         else
                         {
@@ -256,6 +285,7 @@ namespace Compiler
         {
             PredicateNode predicateNode = null;
             TreeNode bodyNode = null;
+            IfNode ifNode = null;
             if (tokens[tokenCounter].GetValue().Equals("("))
             {
                 tokenCounter++;
@@ -264,9 +294,18 @@ namespace Compiler
                 {
                     bodyNode = ParseBody();
                 }
+                ifNode = new IfNode(predicateNode, bodyNode);
                 while (tokens[tokenCounter].GetValue().Equals("else"))
                 {
-                    //set up elses
+                    if (tokens[tokenCounter].GetValue().Equals("{"))
+                    {
+                        tokenCounter++;
+                        ifNode.AddTreeNode(ParseBody());
+                    }
+                    else
+                    {
+                        Console.WriteLine("ERror!");
+                    }
                 }
             }
             else
@@ -274,28 +313,28 @@ namespace Compiler
                 //throw error
                 throw new Exception();
             }
-            return new IfNode(predicateNode, bodyNode);
+            return ifNode;
         }
 
-        private LoopNode ParseLoopNode()
+        private LoopNode ParseLoopNode(Symbol loopType)
         {
             PredicateNode predicateNode = null;
             TreeNode bodyNode = null;
             //just going to assume a while loop for now. Will get to the others later.
-            if (tokens[tokenCounter].GetValue().Equals("("))
-            {
                 tokenCounter++;
                 predicateNode = ParsePredicateNode();
-                while (!tokens[tokenCounter].GetValue().Equals("}"))
+
+                if (loopType.GetValue().Equals("for"))
+                {
+                    AssignVariableNode assignVariableNode = ParseAssignVariableNode(tokens[tokenCounter]);
+                    bodyNode = ParseBody();
+                    bodyNode.AddTreeNode(assignVariableNode);
+                }
+                else
                 {
                     bodyNode = ParseBody();
                 }
-            }
-            else
-            {
-                //throw error
-                throw new Exception();
-            }
+
             return new LoopNode(predicateNode, bodyNode);
         }
 
@@ -305,41 +344,17 @@ namespace Compiler
            // ValueNode value = new ValueNode();
             VariableNode variable = null; //variable type and variable name
             ValueNode value = null;
-            while (!tokens[tokenCounter].GetValue().Equals(";"))
+            if (!tokens[tokenCounter].GetValue().Equals(";"))
             {
-                if(typeToken.GetType().Equals(EState.Id))
-                {
-                    variable = new VariableNode(VariableType.Type.String, nameToken.GetValue());
+                    variable = new VariableNode(VariableType.GetVariableTypeFromString(typeToken.GetValue()), nameToken.GetValue());
                     value = ParseValueNode();
-                }
-                else if (typeToken.GetType().Equals(EState.Num))
-                {
-                    variable = new VariableNode(VariableType.Type.String, nameToken.GetValue());
-                    value = ParseValueNode();
-                }
-                else if (typeToken.GetType().Equals(EState.Space))
-                {
-                    variable = new VariableNode(VariableType.Type.String, nameToken.GetValue());
-                    value = ParseValueNode();
-                }
-                else if (typeToken.GetType().Equals(EState.String))
-                {
-                    variable = new VariableNode(VariableType.Type.String, nameToken.GetValue());
-                    value = ParseValueNode();
-                }
-                else if (typeToken.GetType().Equals(EState.Symbol))
-                {
-                    variable = new VariableNode(VariableType.Type.String, nameToken.GetValue());
-                    value = ParseValueNode();
-                }
-                else {
-                    //Throw error
-                    throw new Exception("ERROR: token is not of type declare variable node ");
-                }
-                tokenCounter++;
             }
-
+            else {
+                //Throw error
+                throw new Exception("ERROR: token is not of type declare variable node ");
+            }
             tokenCounter++;
+            contextList.Add(new Context(nameToken.GetValue(), VariableType.GetVariableTypeFromString(typeToken.GetValue()), false));
             //Value node, and a variable node
             return new DeclareVariableNode(value,variable);
         }
