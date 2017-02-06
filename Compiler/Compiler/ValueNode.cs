@@ -9,9 +9,9 @@ namespace Compiler
     public class ValueNode : TreeNode
     {
         //we could simplify this to just be a double since that would fit everything for the Square Root Program
-        private object value;
+        private double value;
 
-        public ValueNode(object value)
+        public ValueNode(double value)
         {
             this.value = value;
         }
@@ -42,6 +42,12 @@ namespace Compiler
         public MathNode GetMathNode()
         {
             return (MathNode)GetNode(1);
+        }
+
+        public void AddMath(MathNode mathNode, TreeNode valueNode)
+        {
+            AddTreeNode(mathNode);
+            AddTreeNode(valueNode);
         }
     }
 }
