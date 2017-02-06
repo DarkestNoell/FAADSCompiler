@@ -362,7 +362,7 @@ namespace Compiler
 
         private string[] maths = new[] {"/", "+", "-", "*"};
         // (A * A + i) / (2 * A);
-        private TreeNode ParseValueOrContextNode()
+        private ValueNode ParseValueNode()
         {
             ValueNode valueNodeToReturn = null;
             int endParen = 1;
@@ -375,7 +375,7 @@ namespace Compiler
                 {
                     string math = tokens[tokenCounter].GetValue();
                     tokenCounter++;
-                    valueNodeToReturn = new ValueNode(new ValueNode(value1), new MathNode(math), ParseValueOrContextNode());
+                    valueNodeToReturn = new ValueNode(new ValueNode(value1), new MathNode(math), ParseValueNode());
                 }
                 else
                 {
@@ -390,7 +390,7 @@ namespace Compiler
                 {
                     string math = tokens[tokenCounter].GetValue();
                     tokenCounter++;
-                    valueNodeToReturn = new ValueNode(new ContextNode(context), new MathNode(math), ParseValueOrContextNode());
+                    valueNodeToReturn = new ValueNode(new ContextNode(context), new MathNode(math), ParseValueNode());
                 }
                 else
                 {
@@ -405,8 +405,7 @@ namespace Compiler
             {
                 endParen--;
             }
-            tokenCounter++;
-           
+            tokenCounter++;           
             //A + 2
 
             return valueNodeToReturn;
