@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Compiler
 {
-    class TreeNode
+    public class TreeNode
     {
         private List<TreeNode> nodes;
 

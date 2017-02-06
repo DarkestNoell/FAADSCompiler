@@ -144,10 +144,11 @@ namespace Compiler
             while (!tokens[tokenCounter].GetValue().Equals("}"))
             {
                 Symbol currentToken = tokens[tokenCounter];
-                //if token is a variable declaration or assignment
+                //if token is pretty much anything valid since starting with 'blah', 345, or /*( is crap
                 if (currentToken.GetType() == EState.Id)
                 {
                     Keyword.Key keyword;
+                    //if it is a keyword (variable type, condition, loop)
                     if (Enum.TryParse(currentToken.GetValue(), true, out keyword))
                     {
                         //declaring variable
@@ -183,7 +184,16 @@ namespace Compiler
                                 //error next one is not id or does not have paren after
                                 throw new Exception("Error: next token was neither a id nor does have a ')' after it ");
                             }
-
+                        //else if it is a conditional
+                        }
+                        else if (currentToken.GetValue().Equals("if"))
+                        {
+                            bodyNode.AddTreeNode(ParseIfNode());
+                        }
+                        //else if it is a loop
+                        else if (new [] {"while", "for", "do"}.Contains(currentToken.GetValue()))
+                        {
+                            bodyNode.AddTreeNode(ParseLoopNode());
                         }
                         else
                         {
@@ -191,11 +201,11 @@ namespace Compiler
                             throw new Exception();
                         }
                     }
-                    else
+                    else //if it is an assignment or function call (is in context table)
                     {
-                        //if it is an assignment or function call (is in context table)
                         Symbol nameToken = currentToken;
                         tokenCounter++;
+                        //if it is an assignment
                         if (tokens[tokenCounter].GetValue().Equals("="))
                         {
                             if (contextList.Any(x => x.GetName().Equals(nameToken.GetValue()) && !x.IsFunction()))
@@ -203,6 +213,7 @@ namespace Compiler
                                 bodyNode.AddTreeNode(ParseAssignVariableNode(nameToken));
                             }
                         }
+                        //if it is function call
                         else if (tokens[tokenCounter].GetValue().Equals("("))
                         {
                             if (contextList.Any(x => x.GetName().Equals(nameToken.GetValue()) && x.IsFunction()))
@@ -210,7 +221,15 @@ namespace Compiler
                                 bodyNode.AddTreeNode(ParseCallFunctionNode(nameToken));
                             }
                         }
+                        else
+                        {
+                            //error invalid
+                        }
                     }
+                }
+                else
+                {
+                    //error invalid
                 }
             }
             return null;
@@ -219,38 +238,77 @@ namespace Compiler
         //CallFunction Node may need to be made it's own class
         private TreeNode ParseCallFunctionNode(Symbol nameToken)
         {
-            return null;
+            List<TreeNode> paramNodes = new List<TreeNode>();
+            while (!tokens[tokenCounter].GetValue().Equals(")"))
+            {
+                paramNodes.Add(ParseValueOrContextNode());
+            }
+            
+            return new CallFunctionNode(nameToken.GetValue(), paramNodes);
         }
-        //assuming we have found if(
+        //assuming we have found if
         private IfNode ParseIfNode()
         {
-
-            return null;
+            PredicateNode predicateNode = null;
+            TreeNode bodyNode = null;
+            if (tokens[tokenCounter].GetValue().Equals("("))
+            {
+                tokenCounter++;
+                predicateNode = ParsePredicateNode();
+                while (!tokens[tokenCounter].GetValue().Equals("}"))
+                {
+                    bodyNode = ParseBody();
+                }
+                while (tokens[tokenCounter].GetValue().Equals("else"))
+                {
+                    //set up elses
+                }
+            }
+            else
+            {
+                //throw error
+            }
+            return new IfNode(predicateNode, bodyNode);
         }
 
         private LoopNode ParseLoopNode()
         {
-
-            return null;
+            PredicateNode predicateNode = null;
+            TreeNode bodyNode = null;
+            //just going to assume a while loop for now. Will get to the others later.
+            if (tokens[tokenCounter].GetValue().Equals("("))
+            {
+                tokenCounter++;
+                predicateNode = ParsePredicateNode();
+                while (!tokens[tokenCounter].GetValue().Equals("}"))
+                {
+                    bodyNode = ParseBody();
+                }
+            }
+            else
+            {
+                //throw error
+            }
+            return new LoopNode(predicateNode, bodyNode);
         }
 
         //assuming we found int abc
         private DeclareVariableNode ParseDeclareVariableNode(Symbol typeToken, Symbol nameToken)
         {
-            ValueNode value = new ValueNode();
+           // ValueNode value = new ValueNode();
             VariableNode variable = null; //variable type and variable name
             while (!tokens[tokenCounter].GetValue().Equals(";"))
             {
                 if(typeToken.GetType().Equals(EState.Id))
                 {
-                    var type = Enum.Parse(typeToken.GetType().ToString());
-                    variable = new VariableNode(typeToken.GetType(),nameToken.GetValue());
+                   // var type = Enum.Parse(typeToken.GetType().ToString());
+                   
                 }
                 else if (typeToken.GetType().Equals(EState.Num)) {
-                    variable = new VariableNode(typeToken.GetType(), nameToken.GetValue());
+                    
                 }
                 else if (typeToken.GetType().Equals(EState.Space)) {
-                    variable = new VariableNode(VariableType.Type., nameToken.GetValue());
+                   
                 }
                 else if (typeToken.GetType().Equals(EState.String)) {
                     variable = new VariableNode(VariableType.Type.String, nameToken.GetValue());
@@ -288,6 +346,18 @@ namespace Compiler
 
 
             return new AssignVariableNode(valnode,varnode);
+        }
+
+        private TreeNode ParseValueOrContextNode()
+        {
+
+            return null;
+        }
+
+        private PredicateNode ParsePredicateNode()
+        {
+
+            return null;
         }
 
     }
