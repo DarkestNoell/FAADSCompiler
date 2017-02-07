@@ -124,6 +124,39 @@ namespace Compiler
         {
             double value = 0;
             //TODO - get value from doing math and/or retrieving stored contextValues
+            if (valueNode.GetNumberOfChildren() > 0)
+            {
+                //if it is a context
+                if (valueNode.GetNumberOfChildren() == 1)
+                {
+                    value = contextValues.First(x => x.GetContext().GetName()
+                                    .Equals(((ContextNode) valueNode.GetVar1Node()).GetVariableName())).GetValue();
+                }
+                else
+                {
+                    switch (valueNode.GetMathNode().GetMathSymbol())
+                    {
+                        case MathNode.MathSymbol.Divide:
+                            value = ExecuteValueNode((ValueNode)valueNode.GetVar1Node())/ExecuteValueNode((ValueNode)valueNode.GetVar2Node());
+                            break;
+                        case MathNode.MathSymbol.Minus:
+                            value = ExecuteValueNode((ValueNode)valueNode.GetVar1Node()) - ExecuteValueNode((ValueNode)valueNode.GetVar2Node());
+                            break;
+                        case MathNode.MathSymbol.Multiply:
+                            value = ExecuteValueNode((ValueNode)valueNode.GetVar1Node()) * ExecuteValueNode((ValueNode)valueNode.GetVar2Node());
+                            break;
+                        case MathNode.MathSymbol.Plus:
+                            value = ExecuteValueNode((ValueNode)valueNode.GetVar1Node()) + ExecuteValueNode((ValueNode)valueNode.GetVar2Node());
+                            break;
+                    }
+                }
+
+            }
+            else
+            {
+                value = valueNode.GetValue();
+            }
+
             return value;
         }
 
